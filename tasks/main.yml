@@ -6,6 +6,16 @@
 
 - include: install_utilities.yml
 
+- name: update sysctl
+  sysctl: name={{ item.name }} value={{ item.value }} state=present
+  with_items:
+    - { name: "net.core.somaxconn", value: "511" }
+    - { name: "fs.file-max", value: "524288" }
+    - { name: "net.ipv4.tcp_fin_timeout", value: "15" }
+    - { name: "net.ipv4.tcp_window_scaling", value: "1" }
+    - { name: "net.ipv4.tcp_max_syn_backlog", value: "3240000" }
+    - { name: "vm.swappiness", value: "5" }
+
 - name: upgrade kernel
   apt: update_cache=yes name=linux-generic-lts-vivid state=present
   when: ansible_kernel | version_compare("3.18.0", "lt")
