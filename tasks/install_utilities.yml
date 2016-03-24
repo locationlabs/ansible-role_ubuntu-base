@@ -24,4 +24,4 @@
     - vim
     - sysstat
     - traceroute
-
+    - rsyslog-gnutls
