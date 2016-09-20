@@ -13,9 +13,9 @@
 - name: install utilities from apt
   apt: name={{ item }} state=present
   with_items:
-    - jq=1.4-2.1~ubuntu14.04.1
+    - jq
     - htop
-    - mysql-client-5.6
+    - mysql-client
     - mysql-utilities
     - python-mysqldb
     - curl
