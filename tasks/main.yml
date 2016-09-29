@@ -23,3 +23,22 @@
   apt: update_cache=yes name=linux-generic-lts-vivid state=present
   when: ansible_kernel | version_compare("3.18.0", "lt")
   register: upgrade_kernel
+
+- name: upgrade kernel to latest version
+  apt: upgrade=dist update_cache=yes dpkg_options='force-confold,force-confdef'
+  when: ubuntu_dist_upgrade|bool
+
+- name: reboot instance
+  command: /sbin/shutdown -r now
+  register: reboot_result
+  when: ubuntu_dist_upgrade|bool
+
+- name: wait for instance to come online
+  local_action:
+    module: wait_for
+    host: "{{ ansible_ssh_host|default(inventory_hostname) }}"
+    port: "{{ ansible_ssh_port|default(ssh_port) }}"
+    delay: 30
+    timeout: 600
+    state: started
+  when: ubuntu_dist_upgrade|bool
