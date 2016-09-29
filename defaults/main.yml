@@ -1,3 +1,9 @@
 ---
 
 timezone: "America/Los_Angeles"
+
+# upgrade dist to get latest kernel for that distribution
+ubuntu_dist_upgrade: false
+
+# Use ansible_distribution_release backport
+use_distribution_backport: false
