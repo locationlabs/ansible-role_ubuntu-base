@@ -28,10 +28,14 @@
   apt: upgrade=dist update_cache=yes dpkg_options='force-confold,force-confdef'
   when: ubuntu_dist_upgrade|bool
 
+- name: Check if a reboot is required
+  register: file
+  stat: path=/var/run/reboot-required get_md5=no
+
 - name: reboot instance
   command: /sbin/shutdown -r now
   register: reboot_result
-  when: ubuntu_dist_upgrade|bool
+  when: file.stat.exists == true
 
 - name: wait for instance to come online
   local_action:
@@ -41,4 +45,4 @@
     delay: 30
     timeout: 600
     state: started
-  when: ubuntu_dist_upgrade|bool
+  when: file.stat.exists == true
